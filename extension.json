@@ -18,6 +18,9 @@
 	"Hooks": {
 		"HtmlPageLinkRendererEnd": [
 			"NamespacePopupsHooks::onHtmlPageLinkRendererEnd"
+		],
+		"ParserAfterTidy": [
+                        "NamespacePopupsHooks::onParserAfterTidy"
 		]
 	},
 	"ResourceFileModulePaths": {

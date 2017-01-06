@@ -38,4 +38,35 @@ class NamespacePopupsHooks {
 		$ret = $html;
                 return false;
 	}
+
+	public static function onParserAfterTidy( &$parser, &$text ) {
+                global $wgNamespacePopupsNamespaceMap;
+
+                if(!$wgNamespacePopupsNamespaceMap) return;
+
+                $parserOutput = $parser->getOutput();
+
+                $oldLinks = [];
+                // The below algorithm enumerates all links. This may be a little inefficient
+                foreach($parserOutput->getLinks() as $linkNSid => $linksArray) {
+                        $linkNS = MWNamespace::getCanonicalName( $linkNSid );
+                        foreach(array_keys($linksArray) as $remains)
+                                $oldLinks[] = [ $linkNS, $remains ];
+                }
+
+                foreach($oldLinks as $linkInfo) {
+                        list($linkNS, $remains) = $linkInfo;
+
+                        $popupNS = @$wgNamespacePopupsNamespaceMap[$linkNS] ?: @$wgNamespacePopupsNamespaceMap['*'];
+                        if(!$popupNS) continue;
+                        if($popupNS === '*') {
+                                $popupPage = $linkPage;
+                        } else {
+                                $popupPage = $popupNS === '' ? $remains : "$popupNS:$remains";
+                        }
+
+                        $parserOutput->addLink( Title::newFromDBkey($popupPage) );
+                        wfDebugLog( 'namespacepopups', "[[$popupPage]]" );
+                }
+	}
 }
