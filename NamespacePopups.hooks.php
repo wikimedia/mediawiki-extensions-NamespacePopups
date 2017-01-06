@@ -66,7 +66,6 @@ class NamespacePopupsHooks {
                         }
 
                         $parserOutput->addLink( Title::newFromDBkey($popupPage) );
-                        wfDebugLog( 'namespacepopups', "[[$popupPage]]" );
                 }
 	}
 }
