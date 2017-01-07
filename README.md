@@ -4,8 +4,6 @@ the right of links of certain namespaces.
 Normal namespaces are mapped to popup namespaces with
 $wgNamespacePopupsNamespaceMap configuration variable.
 
-It works ONLY when $wgArticlePage is set!!
-
 See https://www.mediawiki.org/wiki/Extension:NamespacePopups
 for detailed help.
 

@@ -4,9 +4,9 @@
 
 class NamespacePopupsHooks {
 	public static function onHtmlPageLinkRendererEnd( $renderer, $target, $isKnown, &$text, &$attribs, &$ret ) {
-                global $wgNamespacePopupsNamespaceMap, $wgNamespacePopupsAnchor, $wgArticlePath;
+                global $wgNamespacePopupsNamespaceMap, $wgNamespacePopupsAnchor;
 
-                if(!$wgArticlePath || !$wgNamespacePopupsNamespaceMap) return true;
+                if(!$wgNamespacePopupsNamespaceMap) return true;
 
                 // It does not work with $target instanceof TitleValue (as in "search for this page title")
 //                 $linkNS = $target->getSubjectNsText();
@@ -20,15 +20,15 @@ class NamespacePopupsHooks {
                 if(!$popupNS) return true;
                 if($popupNS === '*') $popupNS = $linkNS;
 
-		$html = HtmlArmor::getHtml( $text );
-		$html = Html::rawElement( 'a', $attribs, $html );
 		$remains = $target->getDBkey();
                 $anchor = $wgNamespacePopupsAnchor ? $wgNamespacePopupsAnchor : '&uarr;';
                 $page = $popupNS === '' ? $remains : "$popupNS:$remains";
-//                 $url = wfExpandUrl( $url, $proto = PROTO_RELATIVE ); // $proto
-                $url = preg_replace( '/\$1/', $page, $wgArticlePath );
+		$title = Title::newFromText( $page );
+		if(!$title) return true;
+                $url = $title->getLocalUrl();
 
-		$title = Title::newFromLinkTarget( Title::newFromText( $page ) );
+		$html = HtmlArmor::getHtml( $text );
+		$html = Html::rawElement( 'a', $attribs, $html );
 		if ( $title->isKnown() ) {
                         $html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup', 'href' => $url ], $anchor );
 		} else {
