@@ -30,9 +30,9 @@ class NamespacePopupsHooks {
 
 		$title = Title::newFromLinkTarget( Title::newFromText( $page ) );
 		if ( $title->isKnown() ) {
-			$html .= "<a class='mw-pagepopup' href='$url'>$anchor</a>";
+                        $html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup', 'href' => $url ], $anchor );
 		} else {
-			$html .= "<a class='mw-pagepopup new' href='$url'>$anchor</a>";
+                        $html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup new', 'href' => $url ], $anchor );
 		}
 
 		$ret = $html;
