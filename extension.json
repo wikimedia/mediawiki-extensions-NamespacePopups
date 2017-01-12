@@ -9,9 +9,11 @@
 	"license-name": "GPL-2.0+",
 	"type": "other",
 	"requires": {
-            "MediaWiki": ">= 1.28.0",
-            "PagePopups": ">= 0.0.1"
-        },
+		"MediaWiki": ">= 1.28.0",
+		"extensions": {
+			"PagePopups": ">= 0.0.1"
+		}
+	},
 	"AutoloadClasses": {
 		"NamespacePopupsHooks": "NamespacePopups.hooks.php"
 	},
@@ -20,7 +22,7 @@
 			"NamespacePopupsHooks::onHtmlPageLinkRendererEnd"
 		],
 		"ParserAfterTidy": [
-                        "NamespacePopupsHooks::onParserAfterTidy"
+			"NamespacePopupsHooks::onParserAfterTidy"
 		]
 	},
 	"ResourceFileModulePaths": {
@@ -28,5 +30,5 @@
 		"remoteExtPath": "NamespacePopups"
 	},
 	"config": {},
-	"manifest_version": 1
+	"manifest_version": 2
 }
