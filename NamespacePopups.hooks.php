@@ -53,7 +53,11 @@ class NamespacePopupsHooks {
 		if ( $title->isKnown() ) {
 			$html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup', 'href' => $url ], $anchor );
 		} else {
-			$html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup new', 'href' => $url ], $anchor );
+			$query = [];
+			$query['action'] = 'edit';
+			$query['redlink'] = '1';
+			$edit_url = $title->getLinkURL( $query );
+                        $html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup new', 'href' => $edit_url ], $anchor );
 		}
 
 		$ret = $html;
