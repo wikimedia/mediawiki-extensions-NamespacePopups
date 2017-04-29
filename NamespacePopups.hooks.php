@@ -57,7 +57,8 @@ class NamespacePopupsHooks {
 			$query['action'] = 'edit';
 			$query['redlink'] = '1';
 			$edit_url = $title->getLinkURL( $query );
-                        $html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup new', 'href' => $edit_url ], $anchor );
+			$html .= Html::rawElement( 'a',
+				[ 'class' => 'mw-pagepopup new', 'href' => $edit_url ], $anchor );
 		}
 
 		$ret = $html;
