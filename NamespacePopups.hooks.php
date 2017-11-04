@@ -87,8 +87,13 @@ class NamespacePopupsHooks {
 		foreach ( $oldLinks as $linkInfo ) {
 			list( $linkNS, $remains ) = $linkInfo;
 
-			$popupNS = isset( $wgNamespacePopupsNamespaceMap[$linkNS] )
-				? $wgNamespacePopupsNamespaceMap[$linkNS] : @$wgNamespacePopupsNamespaceMap['*'];
+			if ( isset( $wgNamespacePopupsNamespaceMap[$linkNS] ) ) {
+				$popupNS = $wgNamespacePopupsNamespaceMap[$linkNS];
+			} elseif ( isset( $wgNamespacePopupsNamespaceMap['*'] ) ) {
+				$popupNS = $wgNamespacePopupsNamespaceMap['*'];
+			} else {
+				$popupNS = null;
+			}
 			if ( !$popupNS ) {
 				continue;
 			}
