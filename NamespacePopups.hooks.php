@@ -1,8 +1,17 @@
 <?php
 
-// use MediaWiki\Title;
-
 class NamespacePopupsHooks {
+
+	/**
+	 * @param \MediaWiki\Linker\LinkRenderer $renderer
+	 * @param \MediaWiki\Linker\LinkTarget $target
+	 * @param bool $isKnown
+	 * @param string|HtmlArmor &$text
+	 * @param array &$attribs
+	 * @param string &$ret HTML output
+	 *
+	 * @return bool
+	 */
 	public static function onHtmlPageLinkRendererEnd( $renderer, $target, $isKnown, &$text,
 		&$attribs, &$ret
 	) {
@@ -18,7 +27,8 @@ class NamespacePopupsHooks {
 		$linkNS = $wgContLang->getNsText( MWNamespace::getSubject( $target->getNamespace() ) );
 
 		if ( !$linkNS ) {
-			$linkNS = ''; // needed?
+			// TODO: Is this really needed?
+			$linkNS = '';
 		}
 
 		$popupNS = isset( $wgNamespacePopupsNamespaceMap[$linkNS] )
@@ -66,7 +76,11 @@ class NamespacePopupsHooks {
 		return false;
 	}
 
-	public static function onParserAfterTidy( &$parser, &$text ) {
+	/**
+	 * @param Parser $parser
+	 * @param string &$text
+	 */
+	public static function onParserAfterTidy( $parser, &$text ) {
 		global $wgNamespacePopupsNamespaceMap;
 
 		if ( !$wgNamespacePopupsNamespaceMap ) {
@@ -98,10 +112,9 @@ class NamespacePopupsHooks {
 				continue;
 			}
 			if ( $popupNS === '*' ) {
-				$popupPage = $linkPage;
-			} else {
-				$popupPage = $popupNS === '' ? $remains : "$popupNS:$remains";
+				$popupNS = $linkNS;
 			}
+			$popupPage = $popupNS === '' ? $remains : "$popupNS:$remains";
 
 			$parserOutput->addLink( Title::newFromDBkey( $popupPage ) );
 		}
