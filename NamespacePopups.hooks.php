@@ -1,21 +1,27 @@
 <?php
 
+use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
 
 class NamespacePopupsHooks {
 
 	/**
 	 * @param \MediaWiki\Linker\LinkRenderer $renderer
-	 * @param \MediaWiki\Linker\LinkTarget $target
+	 * @param LinkTarget $target
 	 * @param bool $isKnown
 	 * @param string|HtmlArmor &$text
 	 * @param array &$attribs
-	 * @param string &$ret HTML output
+	 * @param ?string &$ret HTML output
 	 *
 	 * @return bool
 	 */
-	public static function onHtmlPageLinkRendererEnd( $renderer, $target, $isKnown, &$text,
-		&$attribs, &$ret
+	public static function onHtmlPageLinkRendererEnd(
+		$renderer,
+		LinkTarget $target,
+		$isKnown,
+		&$text,
+		array &$attribs,
+		&$ret
 	) {
 		global $wgNamespacePopupsNamespaceMap, $wgNamespacePopupsAnchor;
 
@@ -23,15 +29,9 @@ class NamespacePopupsHooks {
 			return true;
 		}
 
-		// It does not work with $target instanceof TitleValue (as in "search for this page title")
-		// $linkNS = $target->getSubjectNsText();
-		$contLang = MediaWikiServices::getInstance()->getContentLanguage();
-		$linkNS = $contLang->getNsText( MWNamespace::getSubject( $target->getNamespace() ) );
-
-		if ( !$linkNS ) {
-			// TODO: Is this really needed?
-			$linkNS = '';
-		}
+		$services = MediaWikiServices::getInstance();
+		$subjectNsId = $services->getNamespaceInfo()->getSubject( $target->getNamespace() );
+		$linkNS = $services->getContentLanguage()->getNsText( $subjectNsId ) ?: '';
 
 		$popupNS = isset( $wgNamespacePopupsNamespaceMap[$linkNS] )
 			? $wgNamespacePopupsNamespaceMap[$linkNS] : null;
@@ -57,24 +57,19 @@ class NamespacePopupsHooks {
 			return true;
 		}
 
-		$url = $title->getLocalUrl();
-
-		$html = HtmlArmor::getHtml( $text );
-		$html = Html::rawElement( 'a', $attribs, $html );
-
+		$classes = 'mw-pagepopup';
 		if ( $title->isKnown() ) {
-			$html .= Html::rawElement( 'a', [ 'class' => 'mw-pagepopup', 'href' => $url ], $anchor );
+			$url = $title->getLocalUrl();
 		} else {
-			$query = [];
-			$query['action'] = 'edit';
-			$query['redlink'] = '1';
-			$edit_url = $title->getLinkURL( $query );
-			$html .= Html::rawElement( 'a',
-				[ 'class' => 'mw-pagepopup new', 'href' => $edit_url ], $anchor );
+			$url = $title->getLinkURL( [ 'action' => 'edit', 'redlink' => '1' ] );
+			$classes .= ' new';
 		}
 
-		$ret = $html;
+		$html = HtmlArmor::getHtml( $text );
+		$ret = Html::rawElement( 'a', $attribs, $html )
+			. Html::rawElement( 'a', [ 'class' => $classes, 'href' => $url ], $anchor );
 
+		// Stop processing the HtmlPageLinkRendererEnd hook
 		return false;
 	}
 
@@ -82,7 +77,7 @@ class NamespacePopupsHooks {
 	 * @param Parser $parser
 	 * @param string &$text
 	 */
-	public static function onParserAfterTidy( $parser, &$text ) {
+	public static function onParserAfterTidy( Parser $parser, &$text ) {
 		global $wgNamespacePopupsNamespaceMap;
 
 		if ( !$wgNamespacePopupsNamespaceMap ) {
@@ -101,7 +96,7 @@ class NamespacePopupsHooks {
 		}
 
 		foreach ( $oldLinks as $linkInfo ) {
-			list( $linkNS, $remains ) = $linkInfo;
+			[ $linkNS, $remains ] = $linkInfo;
 
 			if ( isset( $wgNamespacePopupsNamespaceMap[$linkNS] ) ) {
 				$popupNS = $wgNamespacePopupsNamespaceMap[$linkNS];
