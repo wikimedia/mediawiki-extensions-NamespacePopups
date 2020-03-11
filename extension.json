@@ -23,12 +23,8 @@
 		"NamespacePopupsHooks": "NamespacePopups.hooks.php"
 	},
 	"Hooks": {
-		"HtmlPageLinkRendererEnd": [
-			"NamespacePopupsHooks::onHtmlPageLinkRendererEnd"
-		],
-		"ParserAfterTidy": [
-			"NamespacePopupsHooks::onParserAfterTidy"
-		]
+		"HtmlPageLinkRendererEnd": "NamespacePopupsHooks::onHtmlPageLinkRendererEnd",
+		"ParserAfterTidy": "NamespacePopupsHooks::onParserAfterTidy"
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
