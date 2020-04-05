@@ -9,7 +9,7 @@
 	"descriptionmsg": "namespacepopups-desc",
 	"type": "other",
 	"requires": {
-		"MediaWiki": ">= 1.28.0",
+		"MediaWiki": ">= 1.32.0",
 		"extensions": {
 			"PagePopups": ">= 0.0.1"
 		}

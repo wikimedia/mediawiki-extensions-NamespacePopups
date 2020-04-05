@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class NamespacePopupsHooks {
 
 	/**
@@ -23,8 +25,8 @@ class NamespacePopupsHooks {
 
 		// It does not work with $target instanceof TitleValue (as in "search for this page title")
 		// $linkNS = $target->getSubjectNsText();
-		global $wgContLang;
-		$linkNS = $wgContLang->getNsText( MWNamespace::getSubject( $target->getNamespace() ) );
+		$contLang = MediaWikiServices::getInstance()->getContentLanguage();
+		$linkNS = $contLang->getNsText( MWNamespace::getSubject( $target->getNamespace() ) );
 
 		if ( !$linkNS ) {
 			// TODO: Is this really needed?
