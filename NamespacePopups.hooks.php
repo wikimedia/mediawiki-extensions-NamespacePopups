@@ -87,9 +87,10 @@ class NamespacePopupsHooks {
 		$parserOutput = $parser->getOutput();
 
 		$oldLinks = [];
+		$namespaceInfo = MediaWikiServices::getInstance()->getNamespaceInfo();
 		// The below algorithm enumerates all links. This may be a little inefficient
 		foreach ( $parserOutput->getLinks() as $linkNSid => $linksArray ) {
-			$linkNS = MWNamespace::getCanonicalName( $linkNSid );
+			$linkNS = $namespaceInfo->getCanonicalName( $linkNSid );
 			foreach ( array_keys( $linksArray ) as $remains ) {
 				$oldLinks[] = [ $linkNS, $remains ];
 			}
