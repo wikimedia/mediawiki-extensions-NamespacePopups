@@ -1,7 +1,9 @@
 <?php
 
+use MediaWiki\Html\Html;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 class NamespacePopupsHooks {
 
